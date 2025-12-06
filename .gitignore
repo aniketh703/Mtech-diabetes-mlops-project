@@ -1,0 +1,21 @@
+# Ignore virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# pytest cache
+.pytest_cache/
+
+# Ignore models and artifacts (optional)
+models/*.pkl
+artifacts/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Large files
+*.tar
+*.tar.gz

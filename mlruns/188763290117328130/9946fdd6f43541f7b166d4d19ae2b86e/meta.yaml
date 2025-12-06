@@ -1,0 +1,14 @@
+artifact_uri: /Users/akshay.chaudhary@optum.com/PycharmProjects/Learning Projects/diabetes-mlops-project-main/mlartifacts/9946fdd6f43541f7b166d4d19ae2b86e/artifacts
+end_time: 1765035225855
+entry_point_name: ''
+experiment_id: '188763290117328130'
+lifecycle_stage: active
+run_id: 9946fdd6f43541f7b166d4d19ae2b86e
+run_name: diabetes_run_main_training
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1765035225832
+status: 4
+tags: []
+user_id: akshay.chaudhary@optum.com

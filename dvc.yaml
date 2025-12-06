@@ -1,0 +1,27 @@
+stages:
+  preprocess:
+    cmd: python preprocess.py
+    deps:
+    - data/diabetes.csv
+    outs:
+    - data/diabetes_processed.csv
+  train:
+    cmd: python train.py
+    deps:
+    - data/diabetes_processed.csv
+    - mlflow_config.yaml
+    outs:
+    - model/diabetes_model.pkl
+    metrics:
+    - metrics.json
+  evaluate:
+    cmd: python evaluate.py
+    deps:
+    - data/diabetes_processed.csv
+    - model/diabetes_model.pkl
+    - mlflow_config.yaml
+    metrics:
+    - metrics.json
+    plots:
+    - confusion_matrix.png
+    - prediction_distribution.png

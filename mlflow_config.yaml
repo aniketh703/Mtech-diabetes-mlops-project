@@ -1,0 +1,12 @@
+# MLflow Configuration
+experiment_name: "diabetes_prediction"
+tracking_uri: "file:./mlruns"  # Local file store
+artifact_location: "./mlartifacts"
+default_artifact_root: "./mlartifacts"
+
+# Model registry configuration
+registered_model_name: "diabetes_model"
+model_stage: "Staging"
+
+# Run configuration
+run_name_prefix: "diabetes_run"
