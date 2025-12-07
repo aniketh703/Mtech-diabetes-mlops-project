@@ -16,8 +16,10 @@ This guide provides step-by-step instructions to set up, run, and use all compon
 6. [Running Tests & CI/CD](#running-tests--cicd)
 7. [MLflow Experiment Tracking](#mlflow-experiment-tracking)
 8. [Training a New Model](#training-a-new-model)
-9. [Local Monitoring with Evidently](#local-monitoring-with-evidently)
-10. [Troubleshooting](#troubleshooting)
+   - [Prefect Workflow Orchestration](#training-with-prefect-workflow-orchestration)
+9. [Exploratory Data Analysis (EDA)](#exploratory-data-analysis-eda)
+10. [Local Monitoring with Evidently](#local-monitoring-with-evidently)
+11. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -497,6 +499,120 @@ model = train_model(X_train, y_train)
 import joblib
 joblib.dump(model, "model/diabetes_model.pkl")
 ```
+
+### Training with Prefect Workflow Orchestration
+
+The project uses **Prefect** for complete ML pipeline orchestration with automatic retries, caching, and comprehensive logging.
+
+```powershell
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Install Prefect (if not already installed)
+pip install prefect
+
+# Run the complete ML pipeline
+python prefect_flow.py
+```
+
+#### What the Prefect Pipeline Does
+
+The `prefect_flow.py` script orchestrates the entire ML workflow:
+
+| Stage | Tasks |
+|-------|-------|
+| **Data Preprocessing** | Load data → Validate → Handle missing values → Feature engineering |
+| **Model Training** | Split data → Scale features → Train model → Save model |
+| **Model Evaluation** | Evaluate metrics → Save metrics → Generate report |
+
+#### Pipeline Output
+
+```
+============================================================
+DIABETES MLOPS PIPELINE - PREFECT WORKFLOW
+============================================================
+Step 1: Data Preprocessing
+  - Loaded 768 rows with 9 columns
+  - Validated data quality
+  - Imputed missing values
+  - Added engineered features
+
+Step 2: Model Training
+  - Split: 614 train, 154 test samples
+  - Scaled features with StandardScaler
+  - Training accuracy: 75.90%
+
+Step 3: Model Evaluation
+  - Test accuracy: 73.38%
+  - Precision: 60.32%
+  - Recall: 70.37%
+  - F1 Score: 64.96%
+
+============================================================
+PIPELINE EXECUTION COMPLETE
+Status: SUCCESS
+============================================================
+```
+
+#### Prefect Features Used
+
+| Feature | Description |
+|---------|-------------|
+| **Tasks** | Individual units of work (load, validate, train, etc.) |
+| **Flows** | Orchestrate multiple tasks together |
+| **Sub-flows** | Modular flow composition |
+| **Retries** | Automatic retry on task failure |
+| **Caching** | Cache task results for efficiency |
+| **Logging** | Comprehensive logging with `get_run_logger()` |
+
+---
+
+## Exploratory Data Analysis (EDA)
+
+The project includes a comprehensive EDA notebook for understanding the diabetes dataset.
+
+### Running the EDA Notebook
+
+```powershell
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Launch Jupyter Notebook
+jupyter notebook notebooks/EDA.ipynb
+
+# Or use VS Code to open notebooks/EDA.ipynb directly
+```
+
+### EDA Contents
+
+The `notebooks/EDA.ipynb` notebook includes:
+
+| Section | Description |
+|---------|-------------|
+| **Data Overview** | Shape, types, first rows |
+| **Statistical Summary** | Mean, median, std, skewness, kurtosis |
+| **Missing Values** | Zero values analysis (hidden missing data) |
+| **Target Distribution** | Class balance analysis |
+| **Feature Distributions** | Histograms with mean/median |
+| **Outlier Detection** | Box plots and IQR analysis |
+| **Correlation Analysis** | Heatmap and target correlations |
+| **Feature Relationships** | Pair plots and violin plots |
+| **Key Insights** | Summary findings and recommendations |
+
+### Generated Visualizations
+
+Running the notebook generates these plots:
+
+| File | Description |
+|------|-------------|
+| `eda_missing_values.png` | Missing value bar charts |
+| `eda_target_distribution.png` | Pie and bar charts |
+| `eda_feature_distributions.png` | Feature histograms |
+| `eda_correlation_heatmap.png` | Correlation matrix |
+| `eda_boxplots.png` | Outlier detection |
+| `eda_pairplot.png` | Feature pair plots |
+| `eda_violin_plots.png` | Distribution by outcome |
+| `eda_summary.json` | Summary statistics JSON |
 
 ---
 

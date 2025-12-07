@@ -24,8 +24,10 @@ This project implements an end-to-end MLOps pipeline for diabetes prediction usi
 - **Machine Learning**: scikit-learn, pandas, numpy
 - **MLOps**: MLflow for experiment tracking and model management
 - **Data Versioning**: DVC (Data Version Control)
+- **Workflow Orchestration**: Prefect for pipeline automation
 - **API Framework**: FastAPI with automatic documentation
-- **Model Deployment**: Uvicorn ASGI server
+- **Model Deployment**: Uvicorn ASGI server, Docker containers
+- **Monitoring**: Evidently AI for data drift detection
 - **Testing**: pytest for unit testing
 
 ## ✨ Features
@@ -274,6 +276,40 @@ For detailed API documentation, see [FastAPI_Documentation.md](FastAPI_Documenta
 - **Comparison**: Easy comparison of different runs and parameters
 
 For MLflow setup details, see [MLflow_Integration_Guide.md](MLflow_Integration_Guide.md).
+
+### Prefect Workflow Orchestration
+
+The project uses **Prefect** for workflow orchestration, providing:
+
+- **Task Management**: Individual tasks for data loading, preprocessing, training, and evaluation
+- **Flow Composition**: Sub-flows for modular pipeline design
+- **Retry Logic**: Automatic retries with configurable delays
+- **Caching**: Task result caching for efficiency
+- **Logging**: Comprehensive logging throughout the pipeline
+
+#### Running the Prefect Pipeline
+
+```bash
+# Run the complete ML pipeline
+python prefect_flow.py
+
+# Or use Prefect CLI
+prefect deployment run 'diabetes_ml_pipeline/default'
+```
+
+#### Pipeline Tasks
+
+| Task | Description |
+|------|-------------|
+| `load_raw_data` | Load diabetes dataset from CSV |
+| `validate_data` | Check data quality and validity |
+| `handle_missing_values` | Impute zeros and missing values |
+| `feature_engineering` | Create derived features |
+| `prepare_train_test_split` | Split data for training |
+| `scale_features` | Standardize feature values |
+| `train_model` | Train logistic regression model |
+| `evaluate_model` | Calculate performance metrics |
+| `save_model` | Persist trained model |
 
 ## 💾 Data Management
 

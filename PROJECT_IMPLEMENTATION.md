@@ -165,6 +165,94 @@ Failed: 0
 
 ---
 
+## G2. Prefect Workflow Orchestration
+
+### Overview
+
+The project uses **Prefect** for workflow orchestration, providing a robust and scalable way to manage ML pipelines with features like retry logic, caching, and comprehensive logging.
+
+### Pipeline Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    diabetes_ml_pipeline                         │
+│                    (Main Orchestration Flow)                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────────────┐  ┌─────────────────────┐              │
+│  │ data_preprocessing  │  │  model_training     │              │
+│  │      (Sub-flow)     │──│     (Sub-flow)      │              │
+│  └─────────────────────┘  └─────────────────────┘              │
+│           │                         │                           │
+│           ▼                         ▼                           │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │              model_evaluation (Sub-flow)                 │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                              │                                  │
+│                              ▼                                  │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │                   generate_report                        │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Running the Prefect Pipeline
+
+```powershell
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Run the complete ML pipeline
+python prefect_flow.py
+```
+
+### Prefect Tasks
+
+| Task | Description | Retries |
+|------|-------------|---------|
+| `load_raw_data` | Load diabetes CSV data | 2 |
+| `validate_data` | Validate data quality | 1 |
+| `handle_missing_values` | Impute missing values | 1 |
+| `feature_engineering` | Create derived features | 0 |
+| `save_processed_data` | Save processed CSV | 0 |
+| `prepare_train_test_split` | Split train/test data | 0 |
+| `scale_features` | Standardize features | 0 |
+| `train_model` | Train logistic regression | 2 |
+| `save_model` | Persist model to disk | 0 |
+| `evaluate_model` | Calculate metrics | 0 |
+| `save_metrics` | Save metrics JSON | 0 |
+| `generate_report` | Create pipeline report | 0 |
+
+### Pipeline Output
+
+```
+============================================================
+DIABETES MLOPS PIPELINE - PREFECT WORKFLOW
+============================================================
+Starting Diabetes ML Pipeline...
+Step 1: Data Preprocessing
+Step 2: Model Training  
+Step 3: Model Evaluation
+Step 4: Generating Report
+============================================================
+PIPELINE EXECUTION COMPLETE
+============================================================
+Status: SUCCESS
+Model Accuracy: 0.7532
+Model F1 Score: 0.6154
+============================================================
+```
+
+### Key Features
+
+1. **Automatic Retries**: Tasks retry on failure with configurable delays
+2. **Caching**: Results cached to avoid redundant computation
+3. **Logging**: Comprehensive logging via `get_run_logger()`
+4. **Modular Design**: Sub-flows for logical grouping
+5. **Error Handling**: Graceful failure handling
+
+---
+
 ## H. Local Model Deployment via FastAPI/Streamlit
 
 ### FastAPI Deployment
