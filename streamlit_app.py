@@ -1,8 +1,3 @@
-"""
-Streamlit Dashboard for Diabetes Prediction
-Provides an interactive UI for making predictions
-"""
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -10,10 +5,8 @@ import requests
 import os
 import json
 
-# Configuration
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
-# Page configuration
 st.set_page_config(
     page_title="Diabetes Prediction Dashboard",
     page_icon="🏥",
@@ -53,7 +46,6 @@ st.markdown("""
 
 
 def check_api_health():
-    """Check if the API is available"""
     try:
         response = requests.get(f"{API_URL}/health", timeout=5)
         return response.status_code == 200
@@ -62,7 +54,6 @@ def check_api_health():
 
 
 def make_prediction(data: dict):
-    """Make a prediction via the API"""
     try:
         response = requests.post(
             f"{API_URL}/predict",
@@ -78,17 +69,14 @@ def make_prediction(data: dict):
 
 
 def main():
-    # Header
     st.markdown('<h1 class="main-header">🏥 Diabetes Prediction Dashboard</h1>', unsafe_allow_html=True)
     
-    # Sidebar
     st.sidebar.title("Navigation")
     page = st.sidebar.selectbox(
         "Select Page",
         ["🔮 Make Prediction", "📊 Batch Prediction", "📈 Model Info", "ℹ️ About"]
     )
     
-    # API Status
     api_status = check_api_health()
     if api_status:
         st.sidebar.success("✅ API Connected")
@@ -96,7 +84,6 @@ def main():
         st.sidebar.error("❌ API Offline")
         st.warning("⚠️ The prediction API is not available. Please ensure the API server is running.")
     
-    # Page routing
     if page == "🔮 Make Prediction":
         show_prediction_page()
     elif page == "📊 Batch Prediction":
@@ -108,7 +95,6 @@ def main():
 
 
 def show_prediction_page():
-    """Single prediction page"""
     st.header("🔮 Single Patient Prediction")
     
     st.markdown("""
@@ -195,7 +181,6 @@ def show_prediction_page():
             with col3:
                 st.metric("Risk Level", risk_level)
             
-            # Visual feedback
             if prediction == 1:
                 st.markdown("""
                 <div class="prediction-positive">
@@ -215,7 +200,6 @@ def show_prediction_page():
 
 
 def show_batch_prediction_page():
-    """Batch prediction page"""
     st.header("📊 Batch Prediction")
     
     st.markdown("""
@@ -234,11 +218,9 @@ def show_batch_prediction_page():
         
         if st.button("🔍 Run Batch Prediction", type="primary"):
             st.info("Batch prediction feature - connect to API endpoint for full functionality")
-            # Would connect to batch prediction endpoint
 
 
 def show_model_info_page():
-    """Model information page"""
     st.header("📈 Model Information")
     
     try:
@@ -257,7 +239,6 @@ def show_model_info_page():
     except:
         st.info("Model information unavailable. Please ensure the API is running.")
         
-        # Show placeholder info
         st.subheader("Expected Model Features")
         features = [
             "Pregnancies", "Glucose", "Blood Pressure", "Skin Thickness",
@@ -268,7 +249,6 @@ def show_model_info_page():
 
 
 def show_about_page():
-    """About page"""
     st.header("ℹ️ About This Project")
     
     st.markdown("""

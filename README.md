@@ -514,5 +514,3 @@ For questions and support:
 - scikit-learn contributors
 
 ---
-
-**Built with ❤️ for MLOps and Healthcare AI**

@@ -16,7 +16,8 @@ This guide provides step-by-step instructions to set up, run, and use all compon
 6. [Running Tests & CI/CD](#running-tests--cicd)
 7. [MLflow Experiment Tracking](#mlflow-experiment-tracking)
 8. [Training a New Model](#training-a-new-model)
-9. [Troubleshooting](#troubleshooting)
+9. [Local Monitoring with Evidently](#local-monitoring-with-evidently)
+10. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -495,6 +496,69 @@ model = train_model(X_train, y_train)
 # Save model
 import joblib
 joblib.dump(model, "model/diabetes_model.pkl")
+```
+
+---
+
+## Local Monitoring with Evidently
+
+Evidently is an open-source tool for monitoring ML model performance and data drift. Use it locally to track how your model performs over time.
+
+### Install Evidently
+
+```powershell
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Install Evidently (compatible version)
+pip install evidently==0.4.33
+```
+
+### Run Monitoring
+
+The project includes a pre-built monitoring script `monitor_model.py`:
+
+```powershell
+# Run the monitoring script
+python monitor_model.py
+
+# Open the reports in browser
+Start-Process "reports/data_drift_report.html"
+Start-Process "reports/data_quality_report.html"
+```
+
+### What the Script Does
+
+The `monitor_model.py` script:
+1. Loads reference data (training dataset: `data/diabetes.csv`)
+2. Loads current/production data (`data/new_data.csv`)
+3. Compares feature distributions between datasets
+4. Generates HTML reports in the `reports/` folder
+
+### Generated Reports
+
+| Report | Location | Description |
+|--------|----------|-------------|
+| Data Drift | `reports/data_drift_report.html` | Shows if input features have shifted |
+| Data Quality | `reports/data_quality_report.html` | Shows missing values, anomalies |
+
+### What Evidently Monitors
+
+| Report Type | Description |
+|-------------|-------------|
+| **Data Drift** | Detects if input feature distributions have changed |
+| **Data Quality** | Checks for missing values, duplicates, anomalies |
+| **Target Drift** | Monitors if target variable distribution shifts |
+| **Classification Performance** | Tracks accuracy, precision, recall, F1 over time |
+
+### Quick Monitoring Commands
+
+```powershell
+# === EVIDENTLY MONITORING ===
+pip install evidently==0.4.33                    # Install Evidently
+python monitor_model.py                          # Generate reports
+Start-Process reports/data_drift_report.html    # View drift report
+Start-Process reports/data_quality_report.html  # View quality report
 ```
 
 ---
