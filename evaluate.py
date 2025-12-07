@@ -1,6 +1,8 @@
 import json
 import pandas as pd
 import joblib
+import os
+import sys
 import mlflow
 import mlflow.sklearn
 import yaml
@@ -10,6 +12,22 @@ import seaborn as sns
 import numpy as np
 
 def evaluate():
+    data_path = "data/diabetes_processed.csv"
+    model_path = "model/diabetes_model.pkl"
+    
+    # Check if required files exist (may not exist in CI before DVC pull)
+    if not os.path.exists(data_path):
+        print(f"Warning: Data file '{data_path}' not found.")
+        print("This is expected in CI environments before DVC pull.")
+        print("Skipping evaluation step.")
+        return
+    
+    if not os.path.exists(model_path):
+        print(f"Warning: Model file '{model_path}' not found.")
+        print("This is expected in CI environments before training.")
+        print("Skipping evaluation step.")
+        return
+    
     with open("mlflow_config.yaml", "r") as f:
         config = yaml.safe_load(f)
     
@@ -18,7 +36,7 @@ def evaluate():
     
     with mlflow.start_run(run_name=f"{config['run_name_prefix']}_evaluation"):
         
-        df = pd.read_csv("data/diabetes_processed.csv")
+        df = pd.read_csv(data_path)
         
         X = df.drop("Outcome", axis=1)
         y = df["Outcome"]
@@ -26,7 +44,7 @@ def evaluate():
         mlflow.log_param("eval_dataset_shape", df.shape)
         mlflow.log_param("eval_samples", len(df))
 
-        model = joblib.load("model/diabetes_model.pkl")
+        model = joblib.load(model_path)
 
         y_pred = model.predict(X)
         y_pred_proba = model.predict_proba(X)[:, 1]

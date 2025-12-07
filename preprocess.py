@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -10,6 +11,13 @@ from sklearn.decomposition import PCA
 
 input_path = "data/diabetes.csv"
 output_path = "data/diabetes_processed.csv"
+
+# Check if data file exists (may not exist in CI before DVC pull)
+if not os.path.exists(input_path):
+    print(f"Warning: Data file '{input_path}' not found.")
+    print("This is expected in CI environments before DVC pull.")
+    print("Skipping preprocessing step.")
+    sys.exit(0)
 
 df = pd.read_csv(input_path)
 
