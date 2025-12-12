@@ -543,6 +543,7 @@ For questions and support:
 
 ## 🎉 Acknowledgments
 
+- Team 11 participants
 - Pima Indians Diabetes Database contributors
 - MLflow development team
 - DVC development team
